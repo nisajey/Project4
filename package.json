@@ -1,0 +1,28 @@
+{
+    "name": "restful-server",
+    "version": "0.0.0",
+    "description": "RESTful API Server using Node JS",
+    "author": {
+        "name": "Jonathan Benusa",
+        "email": "benu9372@stthomas.ed"
+    },
+    "contributors": [
+        {
+            "name": "Jackson Meyer",
+            "email": "meye4606@stthomas.edu"
+        },
+        {
+            "name": "",
+            "email": ""
+        }
+    ],
+    "main": "server.js",
+    "repository": {
+        "type": "git",
+        "url": "stpaulcrime"
+    },
+    "dependencies": {
+        "express": "^4.18.2",
+        "sqlite3": "^5.1.2"
+    }
+}
