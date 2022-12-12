@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>St. Paul Crime Map</title>
+    <!-- Foundation CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <!-- Leaflet -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="/css/style.css"/>
+    <!-- Vue App -->
+    <script type="module" src="/src/main.js"></script>
+</head>
+<body onload="initializeApp()">
+    <section class="section">
+        <div class="container">
+          <h1 class="title is-blue">
+            St. Paul Crime
+          </h1>
+          <p class="subtitle">
+            My first website with <strong>Bulma</strong>!
+          </p>
+        </div>
+    </section>
+
+    <!--Navigation Bar-->
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <!-- navbar items and navbar burger... -->      
+        </div>
+        <div class="navbar-menu">
+          <!-- navbar start, navbar end -->
+          <div class="navbar-start">
+              <a class="navbar-item" href="https://www.geeksforgeeks.org/"> >Item1</a>
+              <a class="navbar-item" >Item2</a>
+              <a class="navbar-item" >Item3</a>
+              <a class="navbar-item" >Item4</a>
+              <a class="navbar-item" >Item5</a>
+          </div>
+          <div class="navbar-end">
+            <a class="navbar-item" >Item5</a>
+            <a class="navbar-item" >Item6</a>
+            <a class="navbar-item" >Item7</a>            
+          </div>
+        </div>
+    </nav>
+
+    <!--Provided Code-->
+    <!-- Main app (map, crime table, and filters) -->
+    <div id="app"></div>
+    
+    <!-- Foundation CSS Framework: include before closing <body> tag -->
+    <script src="js/vendor.js"></script>
+    <script src="js/foundation.js"></script>
+    <script type="application/javascript">
+        $(document).foundation();
+    </script>
+</body>
+</html>
