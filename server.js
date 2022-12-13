@@ -10,11 +10,15 @@ const { parse } = require('path');
 
 
 let db_filename = path.join(__dirname, 'db', 'stpaul_crime.sqlite3');
+let public_dir = path.join(__dirname, 'public');
+let template_dir = path.join(__dirname, 'templates');
 
 let app = express();
 let port = 8000;
 
 app.use(express.json());
+
+
 
 // Open SQLite3 database (in read-only mode)
 let db = new sqlite3.Database(db_filename, sqlite3.OPEN_READWRITE, (err) => {
@@ -25,6 +29,13 @@ let db = new sqlite3.Database(db_filename, sqlite3.OPEN_READWRITE, (err) => {
         console.log('Now connected to ' + path.basename(db_filename));
     }
 });
+
+app.use(express.static(public_dir));
+
+app.get('/', (req, res) => {
+    let home = './codes'; // <-- change this
+    res.redirect(home);
+})
 
 
 // GET request handler for crime codes
