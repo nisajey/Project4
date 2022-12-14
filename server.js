@@ -10,15 +10,11 @@ const { parse } = require('path');
 
 
 let db_filename = path.join(__dirname, 'db', 'stpaul_crime.sqlite3');
-let public_dir = path.join(__dirname, 'public');
-let template_dir = path.join(__dirname, 'templates');
 
 let app = express();
-let port = 8000;
+let port = 8001;
 
 app.use(express.json());
-
-
 
 // Open SQLite3 database (in read-only mode)
 let db = new sqlite3.Database(db_filename, sqlite3.OPEN_READWRITE, (err) => {
@@ -29,13 +25,6 @@ let db = new sqlite3.Database(db_filename, sqlite3.OPEN_READWRITE, (err) => {
         console.log('Now connected to ' + path.basename(db_filename));
     }
 });
-
-app.use(express.static(public_dir));
-
-app.get('/', (req, res) => {
-    let home = './codes'; // <-- change this
-    res.redirect(home);
-})
 
 
 // GET request handler for crime codes
@@ -220,6 +209,43 @@ app.get('/incidents', (req, res) => {
 
     promise.then((rows) => {
         res.status(200).type('json').send(rows);
+    });
+});
+
+
+// PUT request handler for new crime incident
+app.put('/new-incident', (req, res) => {
+    console.log(req.body); // uploaded data
+
+    // First, test whether case number is in DB already
+    // If so, response should reject (status 500)
+    let test_query="";
+    test_query = "SELECT * FROM Incidents WHERE Incidents.case_number=" + req.body.case_number;
+
+
+    let promise = databaseSelect(test_query, []);
+    promise.then((rows) => {
+        if (rows.length > 0) {
+            res.status(500).type('txt').send('Error: incident with that case number already exists in database.');
+        } else {
+            // Next, construct query to insert data into DB
+            let query = "";
+            query = "INSERT INTO Incidents (case_number, date_time, code, incident, police_grid, neighborhood_number, block) VALUES ('";
+            query += req.body.case_number + "', '";
+            query += req.body.date + "T";
+            query += req.body.time + "', ";
+            query += req.body.code + ", '";
+            query += req.body.incident + "', ";
+            query += req.body.police_grid + ", ";
+            query += req.body.neighborhood_number + ", '";
+            query += req.body.block + "');";
+
+            // Finally, run query and send ok response
+            let final_promise = databaseRun(query, []);
+            final_promise.then(() => {
+                res.status(200).type('txt').send('OK'); // <-- you may need to change this
+            })
+        }
     });
 });
 
