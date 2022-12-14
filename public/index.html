@@ -7,7 +7,7 @@
     <!--Bulma CSS-->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <!-- Foundation CSS -->
-   <!--<link rel="stylesheet" href="/css/foundation.css">-->
+   <link rel="stylesheet" href="/css/foundation.css">
     <!-- Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
     <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
@@ -28,61 +28,10 @@
         </div>
     </section>
 
-    <!--Navigation Bar-->
-    <section class="section">
-        <nav class="navbar" role="navigation" aria-label="main navigation">
-            <div class="navbar-brand">
-            <!-- navbar items and navbar burger... -->      
-            </div>
-            <div class="navbar-menu">
-            <!-- navbar start, navbar end -->
-            <div class="navbar-start">
-                <a class="navbar-item has-text-primary" href="https://www.geeksforgeeks.org/"> Item1</a>
-                <a class="navbar-item has-text-primary" >Item2</a>
-                <a class="navbar-item has-text-primary" >Item3</a>
-                <a class="navbar-item has-text-primary" >Item4</a>
-                <a class="navbar-item has-text-primary" >Item5</a>
-            </div>
-            <div class="navbar-end">
-                <a class="navbar-item has-text-primary" >Item5</a>
-                <a class="navbar-item has-text-primary" >Item6</a>
-                <a class="navbar-item has-text-primary" >Item7</a>            
-            </div>
-            </div>
-        </nav>
-    </section>
-
 
     <!--Provided Code-->
     <!-- Main app (map, crime table, and filters) -->
-    <section class="section">
-        <div id="app">
-            <!--map-->
-            <div id="leafletmap"></div>
-            <!--table-->
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Codes</th>
-                        <th>Neighborhoods</th>
-                        <th>Incidents</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <td>{{codes}}</td>
-                    <td>{{neighborhoods}}</td>
-                    <td>{{incidents}}</td>
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <section class = "section">
-        <div class="control">
-            <input class="input is-info" type="text" placeholder="Info input">
-            <button class="button is-primary">Submit</button>
-        </div>    
-    </section>
+        <div id="app"></div>
         
 
     

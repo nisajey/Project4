@@ -113,36 +113,51 @@ export default {
 </script>
 
 <template>
-    <div class="grid-container">
-        <div class="grid-x grid-padding-x">
-            <p :class="'cell small-4 ' + ((view === 'map') ? 'selected' : 'unselected')" @click="viewMap">Map</p>
-            <p :class="'cell small-4 ' + ((view === 'new_incident') ? 'selected' : 'unselected')" @click="viewNewIncident">New Incident</p>
-            <p :class="'cell small-4 ' + ((view === 'about') ? 'selected' : 'unselected')" @click="viewAbout">About</p>
+    <div>
+        <div class="section">
+            <nav class="navbar" role="navigation" aria-label="main navigation">
+                <div class="navbar-brand">
+                <!-- navbar items and navbar burger... -->      
+                </div>
+                <div class="navbar-menu"></div>
+                <div class="navbar-start">
+                    <p class = "navbar-item has-text-link" v-on:click = "((view === 'map') ? 'selected' : 'unselected')" @click="viewMap">Map</p>
+                    <p class = "navbar-item has-text-link" v-on:click = "((view === 'new_incident') ? 'selected' : 'unselected')" @click="viewNewIncident">New Incident</p>
+                    <p class = "navbar-item has-text-link" v-on:click = "((view === 'about') ? 'selected' : 'unselected')" @click="viewAbout">About</p>
+                </div>
+            </nav>
         </div>
-    </div>
-    <div v-show="view === 'map'">
-        <div class="grid-container">
-            <div class="grid-x grid-padding-x">
-                <div id="leafletmap" class="cell auto"></div>
+        <div class="section">    
+            <div class = "content is-large" v-show="view === 'map'">
+                <div class="content">
+                    <div class="content">
+                        <div id="leafletmap" class="content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>    
+        <div class="section"> 
+            <div v-if="view === 'new_incident'">
+                <!-- Replace this with your actual form: can be done here or by making a new component -->
+                <div class="grid-container">
+                    <div class="grid-x grid-padding-x">
+                        <h1 class="cell auto">New Incident Form</h1>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div v-if="view === 'new_incident'">
-        <!-- Replace this with your actual form: can be done here or by making a new component -->
-        <div class="grid-container">
-            <div class="grid-x grid-padding-x">
-                <h1 class="cell auto">New Incident Form</h1>
+
+        <div class="section"> 
+            <div v-if="view === 'about'">
+                <!-- Replace this with your actual about the project content: can be done here or by making a new component -->
+                <div class="grid-container">
+                    <div class="grid-x grid-padding-x">
+                        <h1 class="cell auto">About the Project</h1>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div v-if="view === 'about'">
-        <!-- Replace this with your actual about the project content: can be done here or by making a new component -->
-        <div class="grid-container">
-            <div class="grid-x grid-padding-x">
-                <h1 class="cell auto">About the Project</h1>
-            </div>
-        </div>
-    </div>
+    </div>   
 </template>
 
 <style>
