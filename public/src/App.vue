@@ -1,5 +1,6 @@
 <script>
 import $ from 'jquery'
+import { onUpdated } from 'vue';
 
 export default {
     data() {
@@ -46,7 +47,29 @@ export default {
         viewMap(event) {
             this.view = 'map';
         },
+        updateCenter() {
+            let url = "https://nominatim.openstreetmap.org/?street='";
+            url += this.location + "'&format=json&limit=1";
+            console.log(url)
+            this.getJSON(url)
+                .then((data) => {
+                console.log(data)
+                // keep in bounds
+                if (data[0].lat > 45.008206) {
+                    data[0].lat = 45.008206;
+                }else if (data[0].lat < 44.883658) {
+                    data[0].lat = 44.883658;
+                }
 
+                if (data[0].lon < -93.217977) {
+                    data[0].lon = -93.217977;
+                }else if (data[0].lon > -92.993787) {
+                    data[0].lon = -92.993787;
+                }
+                // Zoom on location
+                this.leaflet.map.flyTo(new L.LatLng(data[0].lat, data[0].lon), 16);
+            }).catch((err) => { console.log(err);});
+        },
         viewNewIncident(event) {
             this.view = 'new_incident';
         },
@@ -144,8 +167,8 @@ export default {
                 <div class="content">
                     <div id="leafletmap" class="content"></div>
                 </div>
-                <input class="input is-hovered" type="text" placeholder="location">
-                <button class="button is-primary is-large"> Go </button>
+                <input id class="input is-hovered" type="text" placeholder="location" ref="location"/>
+                <button class="button is-primary is-large" v-on:click="updateCenter"> Go </button>
             </div>
         </div> 
 
@@ -169,6 +192,103 @@ export default {
                     <h1 class="cell auto">About the Project</h1>
                 </div>
             </div>
+
+            <div class="section">
+                <article class="media">
+                    <figure class="media-left">
+                        <p class="image is-flex is-align-items-center is-justify-content-center is-128x128">
+                            <img class="is-rounded boarder" src="../images/jonathan_image.jpg" alt="Image of Jonathan">
+                        </p>
+                    </figure>
+
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>Jonathan Benusa</strong>
+                                <br>
+                               I'm a senior with a major in Computer Science and minor in Electrical Engineering and Catholic Studies. 
+                            </p>   
+                        </div>
+                        <nav class="level is-mobile">
+                            <div class="level-left">
+                                <a class="level-item">
+                                <span class="icon is-small"><i class="fas fa-reply"></i></span>
+                                </a>
+                                <a class="level-item">
+                                <span class="icon is-small"><i class="fas fa-retweet"></i></span>
+                                </a>
+                                <a class="level-item">
+                                <span class="icon is-small"><i class="fas fa-heart"></i></span>
+                                </a>
+                            </div>
+                        </nav>
+                    </div>
+                </article>
+
+                <article class="media">
+                    <figure class="media-left">
+                        <p class="image is-flex is-align-items-center is-justify-content-center is-128x128">
+                            <img class="is-rounded boarder" src="../images/Anisa_image.jpg" alt="Image of Anisa">
+                        </p>
+                    </figure>
+
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>Anisa Jeylani</strong>
+                                <br>
+                               content
+                            </p>   
+                        </div>
+                        <nav class="level is-mobile">
+                            <div class="level-left">
+                                <a class="level-item">
+                                <span class="icon is-small"><i class="fas fa-reply"></i></span>
+                                </a>
+                                <a class="level-item">
+                                <span class="icon is-small"><i class="fas fa-retweet"></i></span>
+                                </a>
+                                <a class="level-item">
+                                <span class="icon is-small"><i class="fas fa-heart"></i></span>
+                                </a>
+                            </div>
+                        </nav>
+                    </div>
+                </article>
+
+                <article class="media">
+                    <figure class="media-left">
+                        <p class="image is-flex is-align-items-center is-justify-content-center is-128x128">
+                            <img class="is-rounded boarder" src="../images/jackson_image.jpg" alt="Image of Jackson">
+                        </p>
+                    </figure>
+
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>Jackson Meyer </strong>
+                                <br>
+                                content
+                            </p>   
+                        </div>
+                        <nav class="level is-mobile">
+                            <div class="level-left">
+                                <a class="level-item">
+                                <span class="icon is-small"><i class="fas fa-reply"></i></span>
+                                </a>
+                                <a class="level-item">
+                                <span class="icon is-small"><i class="fas fa-retweet"></i></span>
+                                </a>
+                                <a class="level-item">
+                                <span class="icon is-small"><i class="fas fa-heart"></i></span>
+                                </a>
+                            </div>
+                        </nav>
+                    </div>
+                </article>
+            </div>
+
+
         </div>
 
 
