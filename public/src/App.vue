@@ -48,26 +48,47 @@ export default {
             this.view = 'map';
         },
         updateCenter() {
-            let url = "https://nominatim.openstreetmap.org/?street='"+ this.address + "'&city='St.Paul'&state='Minnesota'&format=json&limit=1";
-            console.log(url)
-            this.getJSON(url)
-                .then((data) => {
-                console.log(data)
-                // keep in bounds
-                if (data[0].lat > 45.008206) {
-                    data[0].lat = 45.008206;
-                }else if (data[0].lat < 44.883658) {
-                    data[0].lat = 44.883658;
-                }
+            /*If it contains any letters then it must be a street address*/
+            if(/[a-zA-Z]/.test(this.address)){
+                let url = "https://nominatim.openstreetmap.org/?street='"+ this.address + "'&city='St.Paul'&state='Minnesota'&format=json&limit=1";
+                console.log(url)
+                this.getJSON(url)
+                    .then((data) => {
+                    console.log(data)
+                
+                    // keep in bounds
+                    if (data[0].lat > 45.008206) {
+                        data[0].lat = 45.008206;
+                    }else if (data[0].lat < 44.883658) {
+                        data[0].lat = 44.883658;
+                    }
 
-                if (data[0].lon < -93.217977) {
-                    data[0].lon = -93.217977;
-                }else if (data[0].lon > -92.993787) {
-                    data[0].lon = -92.993787;
-                }
-                // Zoom on location
-                this.leaflet.map.flyTo(new L.LatLng(data[0].lat, data[0].lon), 16);
-            }).catch((err) => { console.log(err);});
+                    if (data[0].lon < -93.217977) {
+                        data[0].lon = -93.217977;
+                    }else if (data[0].lon > -92.993787) {
+                        data[0].lon = -92.993787;
+                    }
+                    // Zoom on location
+                    this.leaflet.map.flyTo(new L.LatLng(data[0].lat, data[0].lon), 17);
+                }).catch((err) => { console.log(err);});
+                //else it must be coordinates 
+            }else {
+                let latlong = this.address.replace(",", "").trim().split(' ');
+                console.log(latlong);
+                if (latlong[0]> 45.008206) {
+                    latlong[0] = 45.008206;
+                    }else if (latlong[0] < 44.883658) {
+                        latlong[0] = 44.883658;
+                    }
+
+                    if (latlong[1] < -93.217977) {
+                        latlong[1] = -93.217977;
+                    }else if (latlong[1] > -92.993787) {
+                        latlong[1] = -92.993787;
+                    }
+                    // Zoom on location
+                    this.leaflet.map.flyTo(new L.LatLng(latlong[0], latlong[1]), 17);
+            }
         },
         getData(){
             let url = 'http://127.0.0.1:8001/incidents';
