@@ -70,6 +70,42 @@ export default {
                 this.leaflet.map.flyTo(new L.LatLng(data[0].lat, data[0].lon), 16);
             }).catch((err) => { console.log(err);});
         },
+        processEnteredData() {
+
+            let case_number = document.getElementById("case_number").value;
+            let date = document.getElementById("date").value;
+            let time = document.getElementById("time").value;
+            let code = document.getElementById("code").value;
+            let incident = document.getElementById("incident").value;
+            let police_grid = document.getElementById("police_grid").value;
+            let neighborhood_number = document.getElementById("neighborhood_number").value;
+            let block = document.getElementById("block").value;
+
+            let userData = {
+                "case_number": case_number,
+                "date": "'"+date+"'",
+                "time": "'"+time+"'",
+                "code": code,
+                "incident": "'"+incident+"'",
+                "police_grid": police_grid,
+                "neighborhood_number": neighborhood_number,
+                "block": "'"+block+"'"
+            };
+
+            console.log("Beginning uploadJSON call");
+            this.uploadJSON('PUT', 'http://127.0.0.1:8001/new-incident', userData)
+            .then((err, data) => {
+                console.log("Ending uploadJSON call");
+                if (err) {
+                    console.log(err)
+                }
+                if (data) {
+                    console.log(data);
+                }
+            });
+            
+
+        },
         viewNewIncident(event) {
             this.view = 'new_incident';
         },
@@ -178,8 +214,15 @@ export default {
                 <div class="grid-x grid-padding-x">
                     <h1 class="cell auto">New Incident Form</h1>
                 </div>
-                <input class="input is-hovered" type="text" placeholder="Incident Information">
-                <button class="button is-primary is-large"> Go </button>
+                <input class="input is-hovered" id="case_number" type="text" placeholder="Case Number">
+                <input class="input is-hovered" id="date" type="text" placeholder="Date (2000-01-31)">
+                <input class="input is-hovered" id="time" type="text" placeholder="Time (00:00:00)">
+                <input class="input is-hovered" id="code" type="text" placeholder="Code">
+                <input class="input is-hovered" id="incident" type="text" placeholder="Incident">
+                <input class="input is-hovered" id="police_grid" type="text" placeholder="Police Grid">
+                <input class="input is-hovered" id="neighborhood_number" type="text" placeholder="Neighborhood Number">
+                <input class="input is-hovered" id="block" type="text" placeholder="Block">
+                <button class="button is-primary is-large" v-on:click="processEnteredData"> Go </button>
             </div>
         </div>
 
