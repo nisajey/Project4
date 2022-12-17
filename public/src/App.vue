@@ -210,7 +210,7 @@ export default {
                 <div class="content">
                     <div id="leafletmap" class="content"></div>
                 </div>
-                <input id="location_search" class="input is-hovered" type="text" placeholder="location" v-model="address"/>
+                <input id="location_search" class="input is-hovered" type="text" placeholder="Location: Street Address or Coordinate" v-model="address"/>
                 <button class="button is-primary is-large" v-on:click="updateCenter"> Go </button>
             </div>
         </div> 
@@ -370,16 +370,10 @@ export default {
     </tr>
   </tfoot>
   <tbody>
-    <tr v-for="(value, key) in this.incidents" :key="key">
-        <td>{{ value.case_number }}</td>
-        <td v-text="getType(value.code)"></td> 
-        <td>{{ value.incident }}</td>
-        <td>{{ value.date }}</td>
-        <td>{{ value.time }}</td>
-        <td>{{ value.police_grid }}</td>
-        <td v-text="getNeighborhood(value.neighborhood_number)"></td>
-        <td v-text="replaceX(value.block)"></td>
-        <td><input type="submit" value="Delete" class="button alert" @click="delete_incident(value.case_number)"></td>
+    <tr>
+        <td>{{codes}}</td>
+        <td>{{neighborhoods}}</td>
+        <td>{{incidents}}</td>
     </tr>
   </tbody>
 </table>
