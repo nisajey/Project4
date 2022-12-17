@@ -48,8 +48,7 @@ export default {
             this.view = 'map';
         },
         updateCenter() {
-            let url = "https://nominatim.openstreetmap.org/?street='";
-            url += this.location + "'&format=json&limit=1";
+            let url = "https://nominatim.openstreetmap.org/?street='"+ this.address + "'&city='St.Paul'&state='Minnesota'&format=json&limit=1";
             console.log(url)
             this.getJSON(url)
                 .then((data) => {
@@ -69,6 +68,12 @@ export default {
                 // Zoom on location
                 this.leaflet.map.flyTo(new L.LatLng(data[0].lat, data[0].lon), 16);
             }).catch((err) => { console.log(err);});
+        },
+        getData(){
+            let url = 'http://127.0.0.1:8001/incidents';
+            let data = this.getJSON(url);
+            console.log(data);
+            this.incidents = data;
         },
         processEnteredData() {
 
@@ -156,6 +161,8 @@ export default {
         }).addTo(this.leaflet.map);
         this.leaflet.map.setMaxBounds([[44.883658, -93.217977], [45.008206, -92.993787]]);
 
+        this.getData();
+
         let district_boundary = new L.geoJson();
         district_boundary.addTo(this.leaflet.map);
 
@@ -203,7 +210,7 @@ export default {
                 <div class="content">
                     <div id="leafletmap" class="content"></div>
                 </div>
-                <input id class="input is-hovered" type="text" placeholder="location" ref="location"/>
+                <input id="location_search" class="input is-hovered" type="text" placeholder="location" v-model="address"/>
                 <button class="button is-primary is-large" v-on:click="updateCenter"> Go </button>
             </div>
         </div> 
@@ -335,6 +342,47 @@ export default {
         </div>
 
 
+    </div>
+
+    <!--Table-->
+    <div class = "section">
+        <table class="table">
+  <thead>
+    <tr>
+        <th>Case Number</th>
+        <th>Date Time</th>
+        <th>Code</th>
+        <th>Incident</th>
+        <th>Police Grid</th>
+        <th>Neighborhood Number</th>
+        <th>Block</th>
+    </tr>
+  </thead>
+  <tfoot>
+    <tr>
+        <th>Case Number</th>
+        <th>Date Time</th>
+        <th>Code</th>
+        <th>Incident</th>
+        <th>Police Grid</th>
+        <th>Neighborhood Number</th>
+        <th>Block</th>
+    </tr>
+  </tfoot>
+  <tbody>
+    <tr v-for="(value, key) in this.incidents" :key="key">
+        <td>{{ value.case_number }}</td>
+        <td v-text="getType(value.code)"></td> 
+        <td>{{ value.incident }}</td>
+        <td>{{ value.date }}</td>
+        <td>{{ value.time }}</td>
+        <td>{{ value.police_grid }}</td>
+        <td v-text="getNeighborhood(value.neighborhood_number)"></td>
+        <td v-text="replaceX(value.block)"></td>
+        <td><input type="submit" value="Delete" class="button alert" @click="delete_incident(value.case_number)"></td>
+    </tr>
+  </tbody>
+</table>
     </div>
 </template>
 
