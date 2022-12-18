@@ -100,7 +100,7 @@ export default {
                 this.codes = JSON.parse(JSON.stringify(results[0]));
                 this.neighborhoods = JSON.parse(JSON.stringify(results[1]));
                 this.incidents = JSON.parse(JSON.stringify(results[2])); 
-                //this.placeNeighborhoodMarker();
+                this.placeNeighborhoodMarker();
             })
             .catch((error) =>{
                 alert("Table data not loaded");
@@ -109,27 +109,22 @@ export default {
             
         },
         placeNeighborhoodMarker(){
-            this.incidents.forEach((incident) => {
-                let location = incident.block.substring(incident.block.indexOf("X ") + 1);
-                if(location.length<1){
-                    location = incident.block;
-                }
-                let url = "https://nominatim.openstreetmap.org/?street='"+ location + "'&city='St.Paul'&state='Minnesota'&format=json&limit=1";
-                this.getJSON(url)
-                    .then((data) => {
-                let marker = new L.Marker(data.lat, data.lon);
-                marker.bindPopup(this.crimesCounter[i]+ " crimes committed.");
-                this.leaflet.neighborhood_markers[i].marker = marker;
-                marker.addTo(this.leaflet.map);
-            });});
-        },
-        updateNeighborhoodCount(){
-            console.log(this.neighborhood_markers.count);
-            this.incidents.forEach((incident) => {
-                this.neighborhood_markers[incident.neighborhood_number-1].count = this.neighborhood_markers[incident.neighborhood_number-1].count +1;
-            });
-            console.log(this.neighborhood_markers);
-            this.neighborhood_markers.forEach(marker=>{console.log(marker)});
+            for (let i = 0; i < this.leaflet.neighborhood_markers.length; i++) {
+                let marker = new L.Marker([this.leaflet.neighborhood_markers[i].location[0], this.leaflet.neighborhood_markers[i].location[1]]);
+                let num = i+1;
+                let url = 'http://localhost:8001/count?neighborhood=' + num;
+                this.getJSON(url).then((results) => {
+                    console.log(results);
+                    marker.bindPopup(results[0].count + " incidents occured.");
+                    this.leaflet.neighborhood_markers[i].marker = marker;
+                    marker.addTo(this.leaflet.map);
+                })
+                .catch((error) =>{
+                alert("Neighborhhod Marker Error:");
+                console.log(error);
+            })
+            
+            }
         },
         processEnteredData() {
 
