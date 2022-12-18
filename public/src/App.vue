@@ -91,10 +91,23 @@ export default {
             }
         },
         getData(){
-            let url = 'http://127.0.0.1:8001/incidents';
-            let data = this.getJSON(url);
-            console.log(data);
-            this.incidents = data;
+
+            let incident_url = "http://localhost:8001/incidents?limit=1000";
+            let neighborhood_url = "http://localhost:8001/neighborhoods";
+            let code_url = "http://localhost:8001/codes"
+            Promise.all([this.getJSON(incident_url),this.getJSON(neighborhood_url),this.getJSON(code_url)])
+            .then((results) => {
+                this.incidents = JSON.parse(JSON.stringify(results[0]));            
+                this.neighborhoods = JSON.parse(JSON.stringify(results[1]));
+                this.codes_json = JSON.parse(JSON.stringify(results[2]));
+                this.countCrimes();
+                this.drawMarker();
+            })
+            .catch((error) =>{
+                alert("Something went wrong");
+                console.log("Error:", error);
+            })
+            
         },
         processEnteredData() {
 
@@ -142,10 +155,13 @@ export default {
 
         getJSON(url) {
             return new Promise((resolve, reject) => {
+                
                 $.ajax({
                     dataType: 'json',
+                    crossDomain: true,
                     url: url,
                     success: (response) => {
+                        
                         resolve(response);
                     },
                     error: (status, message) => {
