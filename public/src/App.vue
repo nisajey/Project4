@@ -22,23 +22,23 @@ export default {
                     se: {lat: 44.883658, lng: -92.993787}
                 },
                 neighborhood_markers: [
-                    {location: [44.942068, -93.020521], marker: null, onMap: true},
-                    {location: [44.977413, -93.025156], marker: null, onMap: true},
-                    {location: [44.931244, -93.079578], marker: null, onMap: true},
-                    {location: [44.956192, -93.060189], marker: null, onMap: true},
-                    {location: [44.978883, -93.068163], marker: null, onMap: true},
-                    {location: [44.975766, -93.113887], marker: null, onMap: true},
-                    {location: [44.959639, -93.121271], marker: null, onMap: true},
-                    {location: [44.947700, -93.128505], marker: null, onMap: true},
-                    {location: [44.930276, -93.119911], marker: null, onMap: true},
-                    {location: [44.982752, -93.147910], marker: null, onMap: true},
-                    {location: [44.963631, -93.167548], marker: null, onMap: true},
-                    {location: [44.973971, -93.197965], marker: null, onMap: true},
-                    {location: [44.949043, -93.178261], marker: null, onMap: true},
-                    {location: [44.934848, -93.176736], marker: null, onMap: true},
-                    {location: [44.913106, -93.170779], marker: null, onMap: true},
-                    {location: [44.937705, -93.136997], marker: null, onMap: true},
-                    {location: [44.949203, -93.093739], marker: null, onMap: true}
+                    {location: [44.942068, -93.020521], marker: null, onMap: true, count: 0},
+                    {location: [44.977413, -93.025156], marker: null, onMap: true, count: 0},
+                    {location: [44.931244, -93.079578], marker: null, onMap: true, count: 0},
+                    {location: [44.956192, -93.060189], marker: null, onMap: true, count: 0},
+                    {location: [44.978883, -93.068163], marker: null, onMap: true, count: 0},
+                    {location: [44.975766, -93.113887], marker: null, onMap: true, count: 0},
+                    {location: [44.959639, -93.121271], marker: null, onMap: true, count: 0},
+                    {location: [44.947700, -93.128505], marker: null, onMap: true, count: 0},
+                    {location: [44.930276, -93.119911], marker: null, onMap: true, count: 0},
+                    {location: [44.982752, -93.147910], marker: null, onMap: true, count: 0},
+                    {location: [44.963631, -93.167548], marker: null, onMap: true, count: 0},
+                    {location: [44.973971, -93.197965], marker: null, onMap: true, count: 0},
+                    {location: [44.949043, -93.178261], marker: null, onMap: true, count: 0},
+                    {location: [44.934848, -93.176736], marker: null, onMap: true, count: 0},
+                    {location: [44.913106, -93.170779], marker: null, onMap: true, count: 0},
+                    {location: [44.937705, -93.136997], marker: null, onMap: true, count: 0},
+                    {location: [44.949203, -93.093739], marker: null, onMap: true, count: 0}
                 ]
             }
         };
@@ -100,7 +100,7 @@ export default {
                 this.codes = JSON.parse(JSON.stringify(results[0]));
                 this.neighborhoods = JSON.parse(JSON.stringify(results[1]));
                 this.incidents = JSON.parse(JSON.stringify(results[2])); 
-                this.placeMarkers();
+                //this.placeNeighborhoodMarker();
             })
             .catch((error) =>{
                 alert("Table data not loaded");
@@ -108,8 +108,28 @@ export default {
             })
             
         },
-        placeMarkers(){
-
+        placeNeighborhoodMarker(){
+            this.incidents.forEach((incident) => {
+                let location = incident.block.substring(incident.block.indexOf("X ") + 1);
+                if(location.length<1){
+                    location = incident.block;
+                }
+                let url = "https://nominatim.openstreetmap.org/?street='"+ location + "'&city='St.Paul'&state='Minnesota'&format=json&limit=1";
+                this.getJSON(url)
+                    .then((data) => {
+                let marker = new L.Marker(data.lat, data.lon);
+                marker.bindPopup(this.crimesCounter[i]+ " crimes committed.");
+                this.leaflet.neighborhood_markers[i].marker = marker;
+                marker.addTo(this.leaflet.map);
+            });});
+        },
+        updateNeighborhoodCount(){
+            console.log(this.neighborhood_markers.count);
+            this.incidents.forEach((incident) => {
+                this.neighborhood_markers[incident.neighborhood_number-1].count = this.neighborhood_markers[incident.neighborhood_number-1].count +1;
+            });
+            console.log(this.neighborhood_markers);
+            this.neighborhood_markers.forEach(marker=>{console.log(marker)});
         },
         processEnteredData() {
 
@@ -200,7 +220,7 @@ export default {
         }).addTo(this.leaflet.map);
         this.leaflet.map.setMaxBounds([[44.883658, -93.217977], [45.008206, -92.993787]]);
 
-        this.getData();
+       
 
         let district_boundary = new L.geoJson();
         district_boundary.addTo(this.leaflet.map);
@@ -213,6 +233,8 @@ export default {
         }).catch((error) => {
             console.log('Error:', error);
         });
+
+        this.getData();
     }
 }
 </script>
