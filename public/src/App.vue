@@ -98,30 +98,30 @@ export default {
         },
         processEnteredData() {
 
-            let case_number = document.getElementById("case_number").value;
-            let date = document.getElementById("date").value;
-            let time = document.getElementById("time").value;
-            let code = document.getElementById("code").value;
-            let incident = document.getElementById("incident").value;
-            let police_grid = document.getElementById("police_grid").value;
-            let neighborhood_number = document.getElementById("neighborhood_number").value;
-            let block = document.getElementById("block").value;
+            let user_case_number = document.getElementById("case_number").value;
+            let user_date = document.getElementById("date").value;
+            let user_time = document.getElementById("time").value;
+            let user_code = parseInt(document.getElementById("code").value);
+            let user_incident = document.getElementById("incident").value;
+            let user_police_grid = parseInt(document.getElementById("police_grid").value);
+            let user_neighborhood_number = parseInt(document.getElementById("neighborhood_number").value);
+            let user_block = document.getElementById("block").value;
 
             let userData = {
-                "case_number": case_number,
-                "date": "'"+date+"'",
-                "time": "'"+time+"'",
-                "code": code,
-                "incident": "'"+incident+"'",
-                "police_grid": police_grid,
-                "neighborhood_number": neighborhood_number,
-                "block": "'"+block+"'"
+                case_number: user_case_number,
+                date: user_date,
+                time: user_time,
+                code: user_code,
+                incident: user_incident,
+                police_grid: user_police_grid,
+                neighborhood_number: user_neighborhood_number,
+                block: user_block
             };
-
+            console.log(userData);
             console.log("Beginning uploadJSON call");
             this.uploadJSON('PUT', 'http://127.0.0.1:8001/new-incident', userData)
             .then((err, data) => {
-                console.log("Ending uploadJSON call");
+                console.log("Ending uploadJSON call.");
                 if (err) {
                     console.log(err)
                 }
@@ -129,8 +129,8 @@ export default {
                     console.log(data);
                 }
             });
-            
 
+            
         },
         viewNewIncident(event) {
             this.view = 'new_incident';

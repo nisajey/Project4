@@ -26,6 +26,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "cors": "^2.8.5",
     "jquery": "^3.6.1",
     "vue": "^3.2.45"
   },
