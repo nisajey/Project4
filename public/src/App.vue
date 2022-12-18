@@ -22,23 +22,23 @@ export default {
                     se: {lat: 44.883658, lng: -92.993787}
                 },
                 neighborhood_markers: [
-                    {location: [44.942068, -93.020521], marker: null},
-                    {location: [44.977413, -93.025156], marker: null},
-                    {location: [44.931244, -93.079578], marker: null},
-                    {location: [44.956192, -93.060189], marker: null},
-                    {location: [44.978883, -93.068163], marker: null},
-                    {location: [44.975766, -93.113887], marker: null},
-                    {location: [44.959639, -93.121271], marker: null},
-                    {location: [44.947700, -93.128505], marker: null},
-                    {location: [44.930276, -93.119911], marker: null},
-                    {location: [44.982752, -93.147910], marker: null},
-                    {location: [44.963631, -93.167548], marker: null},
-                    {location: [44.973971, -93.197965], marker: null},
-                    {location: [44.949043, -93.178261], marker: null},
-                    {location: [44.934848, -93.176736], marker: null},
-                    {location: [44.913106, -93.170779], marker: null},
-                    {location: [44.937705, -93.136997], marker: null},
-                    {location: [44.949203, -93.093739], marker: null}
+                    {location: [44.942068, -93.020521], marker: null, onMap: true},
+                    {location: [44.977413, -93.025156], marker: null, onMap: true},
+                    {location: [44.931244, -93.079578], marker: null, onMap: true},
+                    {location: [44.956192, -93.060189], marker: null, onMap: true},
+                    {location: [44.978883, -93.068163], marker: null, onMap: true},
+                    {location: [44.975766, -93.113887], marker: null, onMap: true},
+                    {location: [44.959639, -93.121271], marker: null, onMap: true},
+                    {location: [44.947700, -93.128505], marker: null, onMap: true},
+                    {location: [44.930276, -93.119911], marker: null, onMap: true},
+                    {location: [44.982752, -93.147910], marker: null, onMap: true},
+                    {location: [44.963631, -93.167548], marker: null, onMap: true},
+                    {location: [44.973971, -93.197965], marker: null, onMap: true},
+                    {location: [44.949043, -93.178261], marker: null, onMap: true},
+                    {location: [44.934848, -93.176736], marker: null, onMap: true},
+                    {location: [44.913106, -93.170779], marker: null, onMap: true},
+                    {location: [44.937705, -93.136997], marker: null, onMap: true},
+                    {location: [44.949203, -93.093739], marker: null, onMap: true}
                 ]
             }
         };
@@ -92,22 +92,24 @@ export default {
         },
         getData(){
 
-            let incident_url = "http://localhost:8001/incidents?limit=1000";
-            let neighborhood_url = "http://localhost:8001/neighborhoods";
-            let code_url = "http://localhost:8001/codes"
-            Promise.all([this.getJSON(incident_url),this.getJSON(neighborhood_url),this.getJSON(code_url)])
+            let url_incidents = "http://localhost:8001/incidents";
+            let url_neighborhood = "http://localhost:8001/neighborhoods";
+            let url_code = "http://localhost:8001/codes"
+            Promise.all([this.getJSON(url_code),this.getJSON(url_neighborhood),this.getJSON(url_incidents)])
             .then((results) => {
-                this.incidents = JSON.parse(JSON.stringify(results[0]));            
+                this.codes = JSON.parse(JSON.stringify(results[0]));
                 this.neighborhoods = JSON.parse(JSON.stringify(results[1]));
-                this.codes_json = JSON.parse(JSON.stringify(results[2]));
-                this.countCrimes();
-                this.drawMarker();
+                this.incidents = JSON.parse(JSON.stringify(results[2])); 
+                this.placeMarkers();
             })
             .catch((error) =>{
-                alert("Something went wrong");
-                console.log("Error:", error);
+                alert("Table data not loaded");
+                console.log(error);
             })
             
+        },
+        placeMarkers(){
+
         },
         processEnteredData() {
 
@@ -408,9 +410,7 @@ export default {
   </tfoot>
   <tbody>
     <tr>
-        <td>{{codes}}</td>
-        <td>{{neighborhoods}}</td>
-        <td>{{incidents}}</td>
+        
     </tr>
   </tbody>
 </table>
