@@ -524,9 +524,32 @@ for (let i = 0; i < this.leaflet.neighborhood_markers.length; i++) {
                 </article>
             </div>
 
-
+            <div class="section">
+                <p>Here is a list of the tools we used and a brief description of each:</p>
+                <ul>
+                    <li><strong>Nominatim</strong> - This API allows one to search for locations or retrieve their names based on their coordinates.</li>
+                    <li><strong>Leaflet</strong> - This API allows one to render a map on their website and customize it how they see fit.</li>
+                    <li><strong>VueJS</strong> - This JavaScript framework allows one to make websites easily and fast.</li>
+                    <li><strong>St. Paul Crime</strong> - This API was created by this group in the previous project. It will retrieve data from a crime database.</li>
+                    <li><strong>Bulma</strong> - This CSS framework allows for easy customization of HTML elements.</li>
+                    <li><strong>Foundations</strong> - This CSS framework also allows for simple editing of HTML elements.</li>
+                </ul>
+                <br/><br/>
+                <p>Additionally, here is a list of six interesting things we discovered using our application:</p>
+                <ol>
+                    <li>We learned that there are the most incidents in downtown St. Paul.</li>
+                    <li>It seems like there is a lot of violent crimes in St. Paul.</li>
+                    <li>St. Thomas is located in a couple of the neighborhoods with less incidents.</li>
+                    <li>There are a lot of incidents around Frogtown.</li>
+                    <li>The Leaflet API makes things easy to use and runs smoothly.</li>
+                    <li>THe Nominatim API is really good as well. They work together very well.</li>
+                </ol>
+                <br/>
+                <a href="https://stthomas.hosted.panopto.com/Panopto/Pages/Viewer.aspx?id=5561e8e4-f500-48ed-baf2-af7000dca736&start=0" target="_blank">Demo Video</a>
+            </div>
         </div>
 
+        
 
     </div>
 </template>
