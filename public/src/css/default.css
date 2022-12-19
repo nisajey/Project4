@@ -1,0 +1,14 @@
+.violantCrime {
+    background-color: aquamarine;
+}
+.propCrime {
+    background-color: red;
+}
+.other {
+    background-color: purple;
+}
+
+/* basic positioning */
+.legend { list-style: none !important;  }
+.legend li { float: left; margin-right: 10px; }
+.legend span { border: 1px solid #ccc; float: left; width: 12px; height: 12px; margin: 2px; } 

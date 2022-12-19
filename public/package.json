@@ -26,9 +26,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "cors": "^2.8.5",
     "jquery": "^3.6.1",
-    "vue": "^3.2.45"
+    "vue": "^3.2.45",
+    "vue-progress-circle": "^1.1.2"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^3.2.0",
