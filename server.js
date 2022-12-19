@@ -7,11 +7,11 @@ let express = require('express');
 let sqlite3 = require('sqlite3');
 const { query } = require('express');
 const { parse } = require('path');
-let cors = require('cors');
 
 
 let db_filename = path.join(__dirname, 'db', 'stpaul_crime.sqlite3');
 
+var cors = require('cors');
 let app = express();
 let port = 8001;
 
@@ -28,19 +28,6 @@ let db = new sqlite3.Database(db_filename, sqlite3.OPEN_READWRITE, (err) => {
     }
 });
 
-app.get('/count', (req, res) => {
-    console.log(req.query); // query object (key-value pairs after the ? in the url)
-    let query = "";
-    let keyValue = req.query.neighborhood;
-    query = "SELECT count(*) as count FROM Incidents WHERE Incidents.neighborhood_number = "+keyValue;
-       
-    console.log(query);
-    db.all(query, (err, rows) => {
-        console.log(err);
-        console.log(rows);
-        res.status(200).type('json').send(rows);
-    });
-});
 
 // GET request handler for crime codes
 app.get('/codes', (req, res) => {
@@ -103,7 +90,8 @@ app.get('/neighborhoods', (req, res) => {
     }else {
         query = 'SELECT * FROM Neighborhoods';
     }
-    console.log(query+ ' ORDER BY Code ASC LIMIT 1000');
+ 
+    console.log(query+ ' ORDER BY Code ASC');
     let promise = databaseSelect(query, []);
 
     promise.then((rows) => {
@@ -116,6 +104,7 @@ app.get('/incidents', (req, res) => {
     console.log(req.query); // query object (key-value pairs after the ? in the url)
     let query = "";
     let limit = 1000;
+
     if(Object.keys(req.query).length !== 0) {
 
         query = 'SELECT * FROM Incidents WHERE ';
@@ -217,13 +206,17 @@ app.get('/incidents', (req, res) => {
     }
     if(limit>1000 || limit<0 || typeof limit !== "int")  {
         limit = 1000;
-    }
- 
-    console.log(query+ ' ORDER BY date_time ASC LIMIT '+limit);
+    }  
+     
+    console.log(query+ ' ORDER BY date_time ASC LIMIT ' + limit);
     let promise = databaseSelect(query, []);
 
-    promise.then((rows) => {
-        res.status(200).type('json').send(rows);
+    promise.then((rows) => { 
+        res.status(200).type('json').send(rows.splice(0,limit));
+
+        // original does not work
+        // return 400,000 results
+        // res.status(200).type('json').send(rows);
     });
 });
 
@@ -266,13 +259,12 @@ app.put('/new-incident', (req, res) => {
 
 // DELETE request handler for new crime incident
 app.delete('/remove-incident', (req, res) => {
-    console.log(req.body); // uploaded data
-    
+    console.log(req.query); // uploaded data 
     
     // First, test whether case number is in DB already
     // If not, response should reject (status 500)
     let test_query="";
-    test_query = "SELECT * FROM Incidents WHERE Incidents.case_number=" + req.body.case_number;
+    test_query = "SELECT * FROM Incidents WHERE Incidents.case_number=" + req.query.case_number;
     
 
     let promise = databaseSelect(test_query, []);
