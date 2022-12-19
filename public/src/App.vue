@@ -25,23 +25,23 @@ export default {
                     se: { lat: 44.883658, lng: -92.993787 }
                 },
                 neighborhood_markers: [
-                    { location: [44.942068, -93.020521], marker: null },
-                    { location: [44.977413, -93.025156], marker: null },
-                    { location: [44.931244, -93.079578], marker: null },
-                    { location: [44.956192, -93.060189], marker: null },
-                    { location: [44.978883, -93.068163], marker: null },
-                    { location: [44.975766, -93.113887], marker: null },
-                    { location: [44.959639, -93.121271], marker: null },
-                    { location: [44.947700, -93.128505], marker: null },
-                    { location: [44.930276, -93.119911], marker: null },
-                    { location: [44.982752, -93.147910], marker: null },
-                    { location: [44.963631, -93.167548], marker: null },
-                    { location: [44.973971, -93.197965], marker: null },
-                    { location: [44.949043, -93.178261], marker: null },
-                    { location: [44.934848, -93.176736], marker: null },
-                    { location: [44.913106, -93.170779], marker: null },
-                    { location: [44.937705, -93.136997], marker: null },
-                    { location: [44.949203, -93.093739], marker: null }
+                    { location: [44.942068, -93.020521], marker: null, onMap: true },
+                    { location: [44.977413, -93.025156], marker: null, onMap: true },
+                    { location: [44.931244, -93.079578], marker: null, onMap: true },
+                    { location: [44.956192, -93.060189], marker: null, onMap: true },
+                    { location: [44.978883, -93.068163], marker: null, onMap: true },
+                    { location: [44.975766, -93.113887], marker: null, onMap: true },
+                    { location: [44.959639, -93.121271], marker: null, onMap: true },
+                    { location: [44.947700, -93.128505], marker: null, onMap: true },
+                    { location: [44.930276, -93.119911], marker: null, onMap: true },
+                    { location: [44.982752, -93.147910], marker: null, onMap: true },
+                    { location: [44.963631, -93.167548], marker: null, onMap: true },
+                    { location: [44.973971, -93.197965], marker: null, onMap: true },
+                    { location: [44.949043, -93.178261], marker: null, onMap: true },
+                    { location: [44.934848, -93.176736], marker: null, onMap: true },
+                    { location: [44.913106, -93.170779], marker: null, onMap: true },
+                    { location: [44.937705, -93.136997], marker: null, onMap: true },
+                    { location: [44.949203, -93.093739], marker: null, onMap: true }
                 ]
             },
             crimeTypes: {
@@ -77,27 +77,47 @@ export default {
             this.view = 'map';
         },
         updateCenter() {
-            let url = "https://nominatim.openstreetmap.org/?street='";
-            url += this.location + "'&format=json&limit=1";
-            console.log(url)
-            this.getJSON(url)
-                .then((data) => {
+            /*If it contains any letters then it must be a street address*/
+            if(/[a-zA-Z]/.test(this.address)){
+                let url = "https://nominatim.openstreetmap.org/?street='"+ this.address + "'&city='St.Paul'&state='Minnesota'&format=json&limit=1";
+                console.log(url)
+                this.getJSON(url)
+                    .then((data) => {
                     console.log(data)
+                
                     // keep in bounds
                     if (data[0].lat > 45.008206) {
                         data[0].lat = 45.008206;
-                    } else if (data[0].lat < 44.883658) {
+                    }else if (data[0].lat < 44.883658) {
                         data[0].lat = 44.883658;
                     }
 
                     if (data[0].lon < -93.217977) {
                         data[0].lon = -93.217977;
-                    } else if (data[0].lon > -92.993787) {
+                    }else if (data[0].lon > -92.993787) {
                         data[0].lon = -92.993787;
                     }
                     // Zoom on location
-                    this.leaflet.map.flyTo(new L.LatLng(data[0].lat, data[0].lon), 16);
-                }).catch((err) => { console.log(err); });
+                    this.leaflet.map.flyTo(new L.LatLng(data[0].lat, data[0].lon), 17);
+                }).catch((err) => { console.log(err);});
+                //else it must be coordinates 
+            }else {
+                let latlong = this.address.replace(",", "").trim().split(' ');
+                console.log(latlong);
+                if (latlong[0]> 45.008206) {
+                    latlong[0] = 45.008206;
+                    }else if (latlong[0] < 44.883658) {
+                        latlong[0] = 44.883658;
+                    }
+
+                    if (latlong[1] < -93.217977) {
+                        latlong[1] = -93.217977;
+                    }else if (latlong[1] > -92.993787) {
+                        latlong[1] = -92.993787;
+                    }
+                    // Zoom on location
+                    this.leaflet.map.flyTo(new L.LatLng(latlong[0], latlong[1]), 17);
+            }
         },
         parseEnteredData() {
 
@@ -160,7 +180,42 @@ export default {
         viewAbout(event) {
             this.view = 'about';
         },
+        getData(){
 
+let url_incidents = "http://127.0.0.1:8001/incidents";
+let url_neighborhood = "http://127.0.0.1:8001/neighborhoods";
+let url_code = "http://127.0.0.1:8001/codes"
+Promise.all([this.getJSON(url_code),this.getJSON(url_neighborhood),this.getJSON(url_incidents)])
+.then((results) => {
+    this.codes = JSON.parse(JSON.stringify(results[0]));
+    this.neighborhoods = JSON.parse(JSON.stringify(results[1]));
+    this.incidents = JSON.parse(JSON.stringify(results[2])); 
+    this.placeNeighborhoodMarker();
+})
+.catch((error) =>{
+    alert("Table data not loaded");
+    console.log(error);
+})
+
+},
+placeNeighborhoodMarker(){
+for (let i = 0; i < this.leaflet.neighborhood_markers.length; i++) {
+    let marker = new L.Marker([this.leaflet.neighborhood_markers[i].location[0], this.leaflet.neighborhood_markers[i].location[1]]);
+    let num = i+1;
+    let url = 'http://localhost:8001/count?neighborhood=' + num;
+    this.getJSON(url).then((results) => {
+        console.log(results);
+        marker.bindPopup(results[0].count + " incidents occured.");
+        this.leaflet.neighborhood_markers[i].marker = marker;
+        marker.addTo(this.leaflet.map);
+    })
+    .catch((error) =>{
+    alert("Neighborhhod Marker Error:");
+    console.log(error);
+})
+
+}
+},
         getJSON(url) {
             return new Promise((resolve, reject) => {
                 $.ajax({
@@ -255,8 +310,9 @@ export default {
             .then(response => {
                 this.incidents = response.data;
             });
-
+        this.getData();
         console.log("Finished calling all the APIs");
+
     }
 }
 
@@ -298,7 +354,7 @@ export default {
                 <div class="content">
                     <div id="leafletmap" class="content"></div>
                 </div>
-                <input class="input is-hovered" type="text" placeholder="location" ref="location" id="lat/long" />
+                <input id="location_search" class="input is-hovered" type="text" placeholder="Location: Street Address or Coordinate" v-model="address"/>
                 <button class="button is-primary is-large" v-on:click="updateCenter"> Go </button>
 
                 <center v-if="!incidents.length">

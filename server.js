@@ -28,6 +28,19 @@ let db = new sqlite3.Database(db_filename, sqlite3.OPEN_READWRITE, (err) => {
     }
 });
 
+app.get('/count', (req, res) => {
+    console.log(req.query); // query object (key-value pairs after the ? in the url)
+    let query = "";
+    let keyValue = req.query.neighborhood;
+    query = "SELECT count(*) as count FROM Incidents WHERE Incidents.neighborhood_number = "+keyValue;
+       
+    console.log(query);
+    db.all(query, (err, rows) => {
+        console.log(err);
+        console.log(rows);
+        res.status(200).type('json').send(rows);
+    });
+});
 
 // GET request handler for crime codes
 app.get('/codes', (req, res) => {
