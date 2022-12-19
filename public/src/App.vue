@@ -99,32 +99,48 @@ export default {
                     this.leaflet.map.flyTo(new L.LatLng(data[0].lat, data[0].lon), 16);
                 }).catch((err) => { console.log(err); });
         },
-        processEnteredData() {
+        parseEnteredData() {
 
-            let case_number = document.getElementById("case_number").value;
-            let date = document.getElementById("date").value;
-            let time = document.getElementById("time").value;
-            let code = document.getElementById("code").value;
-            let incident = document.getElementById("incident").value;
-            let police_grid = document.getElementById("police_grid").value;
-            let neighborhood_number = document.getElementById("neighborhood_number").value;
-            let block = document.getElementById("block").value;
+            let all_fields_filled = true;
+            
 
+            let user_case_number = document.getElementById("case_number").value;
+            let user_date = document.getElementById("date").value;
+            let user_time = document.getElementById("time").value;
+            let user_code = parseInt(document.getElementById("code").value);
+            let user_incident = document.getElementById("incident").value;
+            let user_police_grid = parseInt(document.getElementById("police_grid").value);
+            let user_neighborhood_number = parseInt(document.getElementById("neighborhood_number").value);
+            let user_block = document.getElementById("block").value;
+            
+            let user_fields_collection = [user_case_number, user_date, user_time, user_code, user_incident, user_police_grid, user_neighborhood_number, user_block];
+            
             let userData = {
-                "case_number": case_number,
-                "date": "'" + date + "'",
-                "time": "'" + time + "'",
-                "code": code,
-                "incident": "'" + incident + "'",
-                "police_grid": police_grid,
-                "neighborhood_number": neighborhood_number,
-                "block": "'" + block + "'"
+                case_number: user_case_number,
+                date: user_date,
+                time: user_time,
+                code: user_code,
+                incident: user_incident,
+                police_grid: user_police_grid,
+                neighborhood_number: user_neighborhood_number,
+                block: user_block
             };
 
-            console.log("Beginning uploadJSON call");
-            this.uploadJSON('PUT', 'http://127.0.0.1:8001/new-incident', userData)
+            console.log(user_fields_collection[user_fields_collection.length-1]);
+            
+            for (let i=0; i<user_fields_collection.length; i++) {
+                if (user_fields_collection[i] === "") {
+                    all_fields_filled = false;
+                    break;
+                }
+            }
+
+            if (all_fields_filled) {
+                console.log(userData);
+                console.log("Beginning uploadJSON call");
+                this.uploadJSON('PUT', 'http://127.0.0.1:8001/new-incident', userData)
                 .then((err, data) => {
-                    console.log("Ending uploadJSON call");
+                    console.log("Ending uploadJSON call.");
                     if (err) {
                         console.log(err)
                     }
@@ -132,8 +148,10 @@ export default {
                         console.log(data);
                     }
                 });
-
-
+            } else {
+                alert("You must fill in all fields!");
+            }
+            
         },
         viewNewIncident(event) {
             this.view = 'new_incident';
@@ -323,17 +341,26 @@ export default {
                 <div class="grid-x grid-padding-x">
                     <h1 class="cell auto">New Incident Form</h1>
                 </div>
-                <input class="input is-hovered" id="case_number" type="text" placeholder="Case Number">
-                <input class="input is-hovered" id="date" type="text" placeholder="Date (2000-01-31)">
-                <input class="input is-hovered" id="time" type="text" placeholder="Time (00:00:00)">
-                <input class="input is-hovered" id="code" type="text" placeholder="Code">
-                <input class="input is-hovered" id="incident" type="text" placeholder="Incident">
-                <input class="input is-hovered" id="police_grid" type="text" placeholder="Police Grid">
-                <input class="input is-hovered" id="neighborhood_number" type="text" placeholder="Neighborhood Number">
-                <input class="input is-hovered" id="block" type="text" placeholder="Block">
-                <button class="button is-primary is-large" v-on:click="processEnteredData"> Go </button>
+                <div class="columns">
+                    <input class="input is-hovered" id="case_number" type="text" placeholder="Case Number">
+                    <input class="input is-hovered" id="date" type="text" placeholder="Date (2000-01-31)">
+                    <input class="input is-hovered" id="time" type="text" placeholder="Time (00:00:00)">
+                </div>
+                
+                <div class="columns">
+                    <input class="input is-hovered" id="code" type="text" placeholder="Code">
+                    <input class="input is-hovered" id="incident" type="text" placeholder="Incident">
+                    <input class="input is-hovered" id="police_grid" type="text" placeholder="Police Grid">
+                </div>
+                <div class="columns">
+                    <input class="input is-hovered" id="neighborhood_number" type="text" placeholder="Neighborhood Number">
+                    <input class="input is-hovered" id="block" type="text" placeholder="Block">
+                </div>
+
+                <button class="button is-primary is-large" v-on:click="parseEnteredData"> Go </button>
             </div>
         </div>
+
 
 
 
@@ -421,7 +448,7 @@ export default {
                             <p>
                                 <strong>Jackson Meyer </strong>
                                 <br>
-                                content
+                                I am a junior with a major in Computer Science and a minor in Philosophy.
                             </p>
                         </div>
                         <nav class="level is-mobile">
